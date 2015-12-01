@@ -64,8 +64,26 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
     }
 
     @Override
-    public boolean contains(T targetElement) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean contains(T targetElement) throws NotSupportComparable {
+        if (targetElement instanceof Comparable) {
+
+            boolean found = false;
+            try {
+                Iterator i = this.iteratorInOrder();
+                while (i.hasNext()) {
+                    if (i.next().equals(targetElement)) {
+                        found = true;
+                    }
+                }
+
+            } catch (NotSupportComparable ex) {
+
+            }
+            return found;
+        } else {
+            throw new NotSupportComparable("Not support comparable.");
+        }
+
     }
 
     @Override
@@ -138,14 +156,14 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
     protected void inorder(BinaryTreeNode<T> node, ArrayUnorderedList<T> tempList) throws NotSupportComparable {
         if (node != null) {
             inorder(node.left, tempList);
-            tempList.add(node.element);
+            tempList.addToRear(node.element);
             inorder(node.right, tempList);
         }
     }
 
     protected void preorder(BinaryTreeNode<T> node, ArrayUnorderedList<T> tempList) throws NotSupportComparable {
         if (node != null) {
-            tempList.add(node.element);
+            tempList.addToRear(node.element);
             preorder(node.left, tempList);
             preorder(node.right, tempList);
         }
@@ -155,7 +173,7 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
         if (node != null) {
             postorder(node.left, tempList);
             postorder(node.right, tempList);
-            tempList.add(node.element);
+            tempList.addToRear(node.element);
         }
     }
 

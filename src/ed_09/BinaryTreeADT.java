@@ -42,8 +42,9 @@ public interface BinaryTreeADT<T> {
      *
      * @param targetElement the element being sought in the tree
      * @return true if the tree contains the target element
+     * @throws Exceptions.NotSupportComparable
      */
-    public boolean contains(T targetElement);
+    public boolean contains(T targetElement) throws NotSupportComparable;;
 
     /**
      * Returns a reference to the specified element if it is found in this
@@ -51,6 +52,7 @@ public interface BinaryTreeADT<T> {
      *
      * @param targetElement the element being sought in the tree
      * @return a reference to the specified element
+     * @throws Exceptions.ElementNotFoundException
      */
     public T find(T targetElement) throws ElementNotFoundException;
 
