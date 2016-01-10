@@ -13,6 +13,8 @@ import Interfaces.UnorderedListADT;
 import Queues.LinkedQueue;
 import SortedArrays.ArrayUnorderedList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -85,8 +87,20 @@ public class ArrayBinaryTree<T> implements BinaryTreeADT<T> {
     }
 
     @Override
-    public boolean contains(T targetElement) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean contains(T targetElement) throws NotSupportComparable {
+        if (targetElement instanceof Comparable) {
+            try {
+                if (this.find(targetElement) != null) {
+                    return true;
+                }
+            } catch (ElementNotFoundException ex) {
+                return false;
+            }
+
+        } else {
+            throw new NotSupportComparable("Not support comparable.");
+        }
+        return false;
     }
 
     @Override
@@ -125,6 +139,7 @@ public class ArrayBinaryTree<T> implements BinaryTreeADT<T> {
      *
      * @param node the node used in the traversal
      * @param templist the temporary list used in the traversal
+     * @throws Exceptions.NotSupportComparable
      */
     protected void inorder(int node, ArrayUnorderedList<T> templist) throws NotSupportComparable {
         if (node < tree.length) {
@@ -136,6 +151,13 @@ public class ArrayBinaryTree<T> implements BinaryTreeADT<T> {
         }
     }
 
+    /**
+     * Performs a recursive preorder traversal
+     *
+     * @param node the node used in the traversal
+     * @param templist the temporary list used in the traversal
+     * @throws NotSupportComparable
+     */
     protected void preorder(int node, ArrayUnorderedList<T> templist) throws NotSupportComparable {
         if (node < tree.length) {
             if (tree[node] != null) {
@@ -146,6 +168,13 @@ public class ArrayBinaryTree<T> implements BinaryTreeADT<T> {
         }
     }
 
+    /**
+     * Performs a recursive postorder traversal
+     *
+     * @param node the node used in the traversal
+     * @param templist the temporary list used in the traversal
+     * @throws NotSupportComparable
+     */
     protected void postorder(int node, ArrayUnorderedList<T> templist) throws NotSupportComparable {
         if (node < tree.length) {
             if (tree[node] != null) {
@@ -157,19 +186,27 @@ public class ArrayBinaryTree<T> implements BinaryTreeADT<T> {
         }
     }
 
+    /**
+     * Performs a recursive levelorder traversal
+     *
+     * @param node the node used in the traversal
+     * @param templist the temporary list used in the traversal
+     * @throws EmptyQueueException
+     * @throws NotSupportComparable
+     */
     protected void levelorder(int node, ArrayUnorderedList<T> templist) throws EmptyQueueException, NotSupportComparable {
         QueueADT nodes = new LinkedQueue();
-        UnorderedListADT results = new ArrayUnorderedList();
         nodes.enqueue(this.tree[0]);
 
         while (!nodes.isEmpty()) {
             T element = (T) nodes.dequeue();
             if (element != null) {
-                results.addToRear(element);
+                templist.addToRear(element);
                 nodes.enqueue(node * 2 + 1);
                 nodes.enqueue((node + 1) * 2);
+
             } else {
-                results.addToRear(null);
+                templist.addToRear(null);
             }
         }
     }

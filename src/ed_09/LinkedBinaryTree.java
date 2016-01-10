@@ -10,7 +10,6 @@ import SortedArrays.ArrayUnorderedList;
 import Exceptions.ElementNotFoundException;
 import Exceptions.EmptyQueueException;
 import Interfaces.QueueADT;
-import Interfaces.UnorderedListADT;
 import Queues.LinkedQueue;
 import java.util.Iterator;
 
@@ -176,19 +175,19 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
     }
 
     protected void levelorder(BinaryTreeNode<T> node, ArrayUnorderedList<T> tempList) throws EmptyQueueException, NotSupportComparable {
-        QueueADT nodes = new LinkedQueue();
-        UnorderedListADT results = new ArrayUnorderedList();
+        QueueADT<BinaryTreeNode> nodes = new LinkedQueue();
         nodes.enqueue(this.root);
 
         while (!nodes.isEmpty()) {
             BinaryTreeNode element = (BinaryTreeNode) nodes.dequeue();
             if (element != null) {
-                results.addToRear(element);
+                tempList.addToRear(element);
                 nodes.enqueue(element.left);
                 nodes.enqueue(element.right);
             } else {
-                results.addToRear(null);
+                //tempList.addToRear(null);
             }
+
         }
     }
 

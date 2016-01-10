@@ -1,6 +1,8 @@
 package ed_09;
 
 import Exceptions.ElementNotFoundException;
+import Exceptions.EmptyCollectionException;
+import Exceptions.NotSupportComparable;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -38,7 +40,7 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> {
      * @param element the element to be added to the binary search tree
      */
     public void addElement(T element) {
-        BinaryTreeNode<T> temp = new BinaryTreeNode<T>(element);
+        BinaryTreeNode<T> temp = new BinaryTreeNode<>(element);
         Comparable<T> comparableElement = (Comparable<T>) element;
         if (isEmpty()) {
             root = temp;
@@ -64,42 +66,6 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> {
             }
         }
         count++;
-    }
-
-    /**
-     * Returns a reference to a node that will replace the one specified for
-     * removal. In the case where the removed node has two children, the inorder
-     * successor is used as its replacement.
-     *
-     * @param node the node to be removeed
-     * @return a reference to the replacing node
-     */
-    protected BinaryTreeNode<T> replacement(BinaryTreeNode<T> node) {
-        BinaryTreeNode<T> result = null;
-        if ((node.left == null) && (node.right == null)) {
-            result = null;
-        } else if ((node.left != null) && (node.right == null)) {
-            result = node.left;
-        } else if ((node.left == null) && (node.right != null)) {
-            result = node.right;
-        } else {
-            BinaryTreeNode<T> current = node.right;
-            BinaryTreeNode<T> parent = node;
-            while (current.left != null) {
-                parent = current;
-                current = current.left;
-            }
-            if (node.right == current) {
-                current.left = node.left;
-            } else {
-                parent.left = current.right;
-                current.right = node.right;
-                current.left = node.left;
-            }
-            result = current;
-        }
-
-        return result;
     }
 
     /**
@@ -155,15 +121,82 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> {
             } // end outer if
         }
         return result;
-
     }
 
-    protected void removeAllOccurrences(T element) throws ElementNotFoundException {
-        this.removeElement(element);
+    /**
+     * Returns a reference to a node that will replace the one specified for
+     * removal. In the case where the removed node has two children, the inorder
+     * successor is used as its replacement.
+     *
+     * @param node the node to be removeed
+     * @return a reference to the replacing node
+     */
+    protected BinaryTreeNode<T> replacement(BinaryTreeNode<T> node) {
+        BinaryTreeNode<T> result = null;
+        if ((node.left == null) && (node.right == null)) {
+            result = null;
+        } else if ((node.left != null) && (node.right == null)) {
+            result = node.left;
+        } else if ((node.left == null) && (node.right != null)) {
+            result = node.right;
+        } else {
+            BinaryTreeNode<T> current = node.right;
+            BinaryTreeNode<T> parent = node;
+            while (current.left != null) {
+                parent = current;
+                current = current.left;
+            }
+            if (node.right == current) {
+                current.left = node.left;
+            } else {
+                parent.left = current.right;
+                current.right = node.right;
+                current.left = node.left;
+            }
+            result = current;
+        }
 
+        return result;
     }
 
-    protected void removeMin() {
+    
+    protected void removeAllOccurrences(T element) throws ElementNotFoundException, NotSupportComparable {
+        removeElement(element);
+        try {
+            while (contains((T) element)) {
+                removeElement(element);
+            }
+        } catch (Exceptions.ElementNotFoundException e) {
+        }
+    }
 
+    /**
+     * Removes the node with the least  value
+     * 
+     * @return @throws EmptyCollectionException
+     */
+    protected T removeMin() throws EmptyCollectionException {
+        T result = null;
+        if (isEmpty()) {
+            throw new EmptyCollectionException("binary search tree");
+        } else {
+
+            if (root.left == null) {
+                result = root.element;
+                root = root.right;
+            } else {
+                BinaryTreeNode<T> parent = root;
+                BinaryTreeNode<T> current = root.left;
+                while (current.left != null) {
+                    parent = current;
+                    current = current.left;
+                }
+                result = current.element;
+                parent.left = current.right;
+            }
+            --count;
+        }
+
+        return result;
     }
 }

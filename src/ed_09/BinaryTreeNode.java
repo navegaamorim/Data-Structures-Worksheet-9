@@ -42,4 +42,12 @@ public class BinaryTreeNode<T> {
         return children;
     }
 
+    @Override
+    public String toString() {
+        //return "element=" + element + "{ left=" + left + ", right=" + right + '}';
+
+        return "element=" + element;
+
+    }
+
 }
